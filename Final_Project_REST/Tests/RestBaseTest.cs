@@ -10,13 +10,13 @@ namespace Final_Project_REST.Tests
 {
     public class RestBaseTest
     {
-        public RestClient RestClient { get; set; }
-        public BookingIDModel BookingDetails { get; set; }
+        public RestClient restClient { get; set; }
+        public BookingIDModel bookingDetails { get; set; }
 
         [TestInitialize]
         public void Initialize()
         {
-            RestClient = new RestClient();
+            restClient = new RestClient();
         }
     }
 }

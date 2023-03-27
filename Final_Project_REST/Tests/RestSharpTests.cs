@@ -20,8 +20,8 @@ namespace Final_Project_REST.Tests
         [TestInitialize]
         public async Task Initialize()
         {
-            var restResponse = await BookingHelper.CreateBooking(RestClient);
-            BookingDetails = restResponse.Data;
+            var restResponse = await BookingHelper.CreateBooking(restClient);
+            bookingDetails = restResponse.Data;
 
             Assert.AreEqual(restResponse.StatusCode, HttpStatusCode.OK);
         }
@@ -31,16 +31,16 @@ namespace Final_Project_REST.Tests
         {
             foreach (var data in cleanupList)
             {
-                var deleteBookingResponse = await BookingHelper.DeleteBooking(RestClient, data.BookingId);
+                var deleteBookingResponse = await BookingHelper.DeleteBooking(restClient, data.BookingId);
             }
         }
 
         [TestMethod]
         public async Task CreateBooking()
         {
-            var getBookingResponse = await BookingHelper.GetBook(RestClient, BookingDetails.BookingId);
+            var getBookingResponse = await BookingHelper.GetBook(restClient, bookingDetails.BookingId);
 
-            cleanupList.Add(BookingDetails);
+            cleanupList.Add(bookingDetails);
 
             var expectedBookingDetails = GenerateBookingDetails.bookingDetails();
 
@@ -56,9 +56,9 @@ namespace Final_Project_REST.Tests
         [TestMethod]
         public async Task UpdateBooking()
         {
-            var getBookingResponse = await BookingHelper.GetBook(RestClient, BookingDetails.BookingId);
+            var getBookingResponse = await BookingHelper.GetBook(restClient, bookingDetails.BookingId);
 
-            cleanupList.Add(BookingDetails);
+            cleanupList.Add(bookingDetails);
 
             var updateBookingDetails = new BookingDetailsModel()
             {
@@ -69,11 +69,11 @@ namespace Final_Project_REST.Tests
                 Bookingdates = getBookingResponse.Data.Bookingdates,
                 Additionalneeds = getBookingResponse.Data.Additionalneeds
             };
-            var updateBooking = await BookingHelper.UpdateBooking(RestClient, updateBookingDetails, BookingDetails.BookingId);
+            var updateBooking = await BookingHelper.UpdateBooking(restClient, updateBookingDetails, bookingDetails.BookingId);
 
             Assert.AreEqual(HttpStatusCode.OK, updateBooking.StatusCode);
 
-            var getUpdatedBookingResponse = await BookingHelper.GetBook(RestClient, BookingDetails.BookingId);
+            var getUpdatedBookingResponse = await BookingHelper.GetBook(restClient, bookingDetails.BookingId);
 
             Assert.AreEqual(updateBookingDetails.Firstname, getUpdatedBookingResponse.Data.Firstname, "Firstname mismatch");
             Assert.AreEqual(updateBookingDetails.Lastname, getUpdatedBookingResponse.Data.Lastname, "Lastname mismatch");
@@ -87,7 +87,7 @@ namespace Final_Project_REST.Tests
         [TestMethod]
         public async Task RemoveBooking()
         {
-            var delBooking = await BookingHelper.DeleteBooking(RestClient, BookingDetails.BookingId);
+            var delBooking = await BookingHelper.DeleteBooking(restClient, bookingDetails.BookingId);
 
             Assert.AreEqual(HttpStatusCode.Created, delBooking.StatusCode);
         }
@@ -95,9 +95,9 @@ namespace Final_Project_REST.Tests
         [TestMethod]
         public async Task ValidateBooking()
         {
-            var getBooking = await BookingHelper.GetBook(RestClient, 950000050);
+            var getBooking = await BookingHelper.GetBook(restClient, 950000050);
 
-            cleanupList.Add(BookingDetails);
+            cleanupList.Add(bookingDetails);
 
             Assert.AreEqual(HttpStatusCode.NotFound, getBooking.StatusCode);
 
